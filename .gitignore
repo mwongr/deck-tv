@@ -53,7 +53,6 @@ backups/
 temp/
 *.log
 dvr-jobs.json
-docs/
 .agent/
 .gemini/
 dist-electron/
