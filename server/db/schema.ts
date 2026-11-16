@@ -98,7 +98,6 @@ export const schema = `
 
   CREATE INDEX IF NOT EXISTS idx_channels_group ON channels(group_id);
   CREATE INDEX IF NOT EXISTS idx_channels_source ON channels(source_id);
-  CREATE INDEX IF NOT EXISTS idx_channels_rating ON channels(rating);
   CREATE INDEX IF NOT EXISTS idx_epg_channel_time ON epg_programs(channel_tvg_id, start);
   CREATE INDEX IF NOT EXISTS idx_epg_source ON epg_programs(source_id);
   CREATE INDEX IF NOT EXISTS idx_custom_group_items ON custom_group_items(custom_group_id);

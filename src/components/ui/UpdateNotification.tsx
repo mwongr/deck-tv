@@ -43,7 +43,7 @@ export function UpdateNotification() {
   const [state, setState] = useState<UpdateState>('idle');
   const [version, setVersion] = useState<string>('');
   const [progress, setProgress] = useState<number>(0);
-  const [githubUrl, setGithubUrl] = useState<string>('https://github.com/zerosum/deck-tv');
+  const [githubUrl, setGithubUrl] = useState<string>('https://github.com/mwongr/deck-tv');
   const [visible, setVisible] = useState<boolean>(false);
 
   const tier = (process.env.NEXT_PUBLIC_APP_TIER || 'diy').toLowerCase();
@@ -118,12 +118,21 @@ export function UpdateNotification() {
         .then(handleData)
         .catch((apiErr) => {
           console.debug('[UpdateNotification] Internal proxy check failed, trying direct:', apiErr.message);
-          // Fallback to direct fetch
-          return fetch(`https://zerosum.ca/appversions/updatedecktv.json?t=${timestamp}`, { cache: 'no-store' })
+          // Fallback to direct GitHub Releases API fetch
+          return fetch('https://api.github.com/repos/mwongr/deck-tv/releases/latest', {
+            cache: 'no-store',
+            headers: { 'Accept': 'application/vnd.github.v3+json' },
+          })
             .then((res) => {
               if (!res.ok) throw new Error(`HTTP ${res.status}`);
-              return res.json() as Promise<DIYUpdateResponse>;
+              return res.json();
             })
+            .then((gh): DIYUpdateResponse => ({
+              latest_version: typeof gh.tag_name === 'string' ? gh.tag_name.replace(/^v/i, '') : '',
+              release_date: gh.published_at,
+              release_notes: gh.body,
+              github_url: gh.html_url,
+            }))
             .then(handleData);
         })
         .catch((err) => {

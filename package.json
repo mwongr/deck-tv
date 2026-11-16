@@ -73,9 +73,9 @@
     ],
     "publish": [
       {
-        "provider": "generic",
-        "url": "https://zerosum.ca/appversions/",
-        "channel": "latestdecktv"
+        "provider": "github",
+        "owner": "mwongr",
+        "repo": "deck-tv"
       }
     ],
     "asar": false,

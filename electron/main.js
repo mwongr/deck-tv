@@ -360,7 +360,8 @@ async function requestQuit() {
 }
 
 // ---------- Dual-Tier Auto Updater ----------
-const UPDATE_FEED_URL = 'https://zerosum.ca/appversions/';
+const GITHUB_OWNER = 'mwongr';
+const GITHUB_REPO = 'deck-tv';
 
 function getAppTier() {
   if (process.env.NEXT_PUBLIC_APP_TIER) return process.env.NEXT_PUBLIC_APP_TIER;
@@ -376,7 +377,7 @@ function setupAutoUpdater() {
     return;
   }
 
-  log(`Initializing autoUpdater for ${APP_NAME} (${UPDATE_FEED_URL})...`);
+  log(`Initializing autoUpdater for ${APP_NAME} (github.com/${GITHUB_OWNER}/${GITHUB_REPO})...`);
   autoUpdater.autoDownload = true;
   autoUpdater.autoInstallOnAppQuit = true;
   autoUpdater.logger = {
@@ -385,11 +386,10 @@ function setupAutoUpdater() {
     error: (...args) => log('[updater:error]', ...args),
   };
 
-  autoUpdater.channel = 'latestdecktv';
   autoUpdater.setFeedURL({
-    provider: 'generic',
-    url: UPDATE_FEED_URL,
-    channel: 'latestdecktv',
+    provider: 'github',
+    owner: GITHUB_OWNER,
+    repo: GITHUB_REPO,
   });
 
   const sendToRenderer = (channel, ...args) => {
