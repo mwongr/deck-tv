@@ -1,0 +1,108 @@
+{
+  "name": "deck-tv-app",
+  "productName": "Deck TV",
+  "version": "1.0.0",
+  "description": "Deck TV - IPTV player with EPG and DVR",
+  "author": "Deck TV",
+  "private": true,
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "next dev -p 38472",
+    "build": "next build",
+    "start": "next start -p 38472",
+    "lint": "eslint",
+    "dvr": "esno server/dvr/index.ts",
+    "build:next": "npm run rebuild:node && next build && node electron/prepare-next.js",
+    "rebuild:electron": "cd node_modules/better-sqlite3 && npx prebuild-install -r electron -t 39.8.10",
+    "rebuild:node": "cd node_modules/better-sqlite3 && npx prebuild-install",
+    "start:electron": "npm run build:next && npm run rebuild:electron && cross-env NODE_ENV=production electron .",
+    "poststart:electron": "npm run rebuild:node",
+    "build:exe": "cross-env NEXT_PUBLIC_APP_TIER=exe npm run build:next && npm run rebuild:electron && electron-builder --win nsis --x64",
+    "postbuild:exe": "npm run rebuild:node",
+    "smoke:exe": "cross-env DECKTV_SMOKE_TEST=1 \"dist-electron/win-unpacked/Deck TV.exe\""
+  },
+  "dependencies": {
+    "@tanstack/react-virtual": "^3.13.18",
+    "better-sqlite3": "^12.6.2",
+    "date-fns": "^4.1.0",
+    "dexie": "^4.3.0",
+    "dexie-react-hooks": "^4.2.0",
+    "electron-updater": "^6.8.11",
+    "fs-extra": "^11.3.3",
+    "hls.js": "^1.6.15",
+    "lucide-react": "^0.563.0",
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.19.33",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "cross-env": "^10.1.0",
+    "electron": "^39.8.10",
+    "electron-builder": "^26.18.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "esno": "^4.8.0",
+    "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5"
+  },
+  "build": {
+    "appId": "com.decktv.app",
+    "productName": "Deck TV",
+    "copyright": "Copyright © 2026 Deck TV",
+    "directories": {
+      "output": "dist-electron",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron/**/*",
+      ".next/**/*",
+      "!.next/cache/**/*",
+      "!.next/dev/**/*",
+      "!.next/diagnostics/**/*",
+      "!.next/trace*",
+      "public/**/*",
+      "next.config.mjs",
+      "package.json"
+    ],
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://zerosum.ca/appversions/",
+        "channel": "latestdecktv"
+      }
+    ],
+    "asar": false,
+    "npmRebuild": false,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Deck TV",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "artifactName": "Deck-TV-Setup-${version}.exe"
+    }
+  }
+}
