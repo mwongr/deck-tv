@@ -7,11 +7,14 @@
 [![GitHub](https://img.shields.io/badge/GitHub-mwongr%2Fdeck--tv-blue?logo=github)](https://github.com/mwongr/deck-tv)
 [![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black?logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2.3-61dafb?logo=react)](https://react.dev/)
+[![Electron](https://img.shields.io/badge/Electron-39.8.10-47848F?logo=electron)](https://www.electronjs.org/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
 [![SQLite](https://img.shields.io/badge/Better--SQLite3-12.6.2-003B57?logo=sqlite)](https://github.com/WiseLibs/better-sqlite3)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey)](#license)
 
-**Deck TV** is a high-performance IPTV player, centralized media server, and autonomous background DVR system built for the modern cord-cutter. Bridging the gap between lightweight streaming clients and resource-heavy media servers, Deck TV operates as a self-hosted web application and continuous background service. Deck TV schedules and records live broadcasts autonomously, transcodes incompatible feeds on the fly using dedicated GPU acceleration, normalizes multi-channel surround audio for clear dialogue, and shares your entire library across any device on your local network.
+**Deck TV** is a high-performance IPTV player, centralized media server, and autonomous background DVR system built for the modern cord-cutter. Bridging the gap between lightweight streaming clients and resource-heavy media servers, Deck TV operates both as a standalone Windows desktop application and a self-hosted web application. Deck TV schedules and records live broadcasts autonomously, transcodes incompatible feeds on the fly using dedicated GPU acceleration, normalizes multi-channel surround audio for clear dialogue, and shares your entire library across any device on your local network.
+
+> **Download for Windows:** Grab the latest Windows installer (**[Deck-TV-Setup-1.0.0.exe](https://github.com/mwongr/deck-tv/releases/download/v1.0.0/Deck-TV-Setup-1.0.0.exe)**) or view all downloads on the [GitHub Releases](https://github.com/mwongr/deck-tv/releases) page.
 
 ---
 
@@ -35,9 +38,13 @@
   - [6. Network & Sharing](#6-network--sharing)
   - [7. Backup & Restore](#7-backup--restore)
 - [Getting Started](#getting-started)
+  - [Windows Installer (.exe)](#windows-installer-exe)
   - [Prerequisites](#prerequisites)
   - [Installation & Quick Start](#installation--quick-start)
   - [Running on Windows (`start-deck-tv.bat`)](#running-on-windows-start-deck-tvbat)
+- [Desktop App (Electron)](#desktop-app-electron)
+  - [Run Locally in Electron](#run-locally-in-electron)
+  - [Build Windows Installer & Smoke Test](#build-windows-installer--smoke-test)
 - [Technology Stack](#technology-stack)
 - [Disclaimer](#disclaimer)
 - [License](#license)
@@ -280,6 +287,17 @@ Safeguard your entire IPTV environment, migrate to a new machine, or roll back c
 
 ## Getting Started
 
+### Windows Installer (.exe)
+
+For the fastest setup on Windows, download and run the standalone desktop installer:
+
+* **Direct Download**: **[Deck-TV-Setup-1.0.0.exe](https://github.com/mwongr/deck-tv/releases/download/v1.0.0/Deck-TV-Setup-1.0.0.exe)**
+* **All Releases**: [https://github.com/mwongr/deck-tv/releases](https://github.com/mwongr/deck-tv/releases)
+
+*(If you prefer to run from source, follow the prerequisites and setup steps below.)*
+
+---
+
 ### Prerequisites
 
 1. **Node.js**: Version **18.17.0** or higher (Version 20+ recommended).
@@ -338,8 +356,31 @@ Simply double-click **`start-deck-tv.bat`** from the application folder.
 
 ---
 
+## Desktop App (Electron)
+
+Deck TV can also be run and packaged as a standalone Windows desktop application via Electron (`39.8.10`) and `electron-builder` (`26.18.0`).
+
+### Run Locally in Electron
+
+```bash
+npm install
+npm run start:electron
+```
+
+### Build Windows Installer & Smoke Test
+
+```bash
+npm run build:exe
+npm run smoke:exe
+```
+
+`build:exe` builds the Next.js production bundle (`NEXT_PUBLIC_APP_TIER=exe`), shims Turbopack native-module links (`electron/prepare-next.js`), rebuilds `better-sqlite3` for Electron, and packages `dist-electron/Deck-TV-Setup-1.0.0.exe`. `postbuild:exe` restores `better-sqlite3` for Node.js afterward.
+
+---
+
 ## Technology Stack
 
+* **Desktop Runtime**: [Electron 39](https://www.electronjs.org/) (`electron-builder` & `electron-updater`)
 * **Framework**: [Next.js 16](https://nextjs.org/) (App Router & API Handlers)
 * **UI Library**: [React 19](https://react.dev/) & [TypeScript 5](https://www.typescriptlang.org/)
 * **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
@@ -374,26 +415,3 @@ This project is licensed under the **Creative Commons Attribution-NonCommercial 
 
 ### Disclaimer & Third-Party Content
 Deck TV is provided **"as is"**, without warranty of any kind, express or implied. Deck TV is solely a media player and management application—it does not include, host, or provide any IPTV playlists, channels, EPG feeds, or media content. Users are solely responsible for the streams they configure and must ensure compliance with all applicable laws and the terms of service of their content and IPTV providers.
-
-
----
-
-## Desktop App (Electron)
-
-Deck TV can also be run and packaged as a standalone Windows desktop application via Electron (`39.8.10`) and `electron-builder` (`26.18.0`).
-
-### Run Locally in Electron
-
-```bash
-npm install
-npm run start:electron
-```
-
-### Build Windows Installer & Smoke Test
-
-```bash
-npm run build:exe
-npm run smoke:exe
-```
-
-`build:exe` builds the Next.js production bundle (`NEXT_PUBLIC_APP_TIER=exe`), shims Turbopack native-module links (`electron/prepare-next.js`), rebuilds `better-sqlite3` for Electron, and packages `dist-electron/Deck-TV-Setup-1.0.0.exe`. `postbuild:exe` restores `better-sqlite3` for Node.js afterward.
